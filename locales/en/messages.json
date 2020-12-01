@@ -1014,6 +1014,20 @@
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
+    
+    "qaGyroStatus": {
+        "message": "Gyro Status:"
+    },
+    "qaGyroStatus_DualGyros": {
+        "message": "DUAL"
+    },
+    "qaGyroStatus_FirstOnly": {
+        "message": "FIRST ONLY"
+    },
+    "qaGyroStatus_SecondOnly": {
+        "message": "SECOND ONLY"
+    },
+    
     "featureNone": {
         "message": "&lt;Select One&gt;"
     },

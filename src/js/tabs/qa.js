@@ -192,14 +192,31 @@ TABS.qa.initialize = function (callback) {
         TABS.qa.transponder.available = semver.gte(CONFIG.apiVersion, "1.16.0");
     }
 
+    var first_init = init_transponder_config;
+    
     if ( !TABS.qa.transponder.available ) {
-        init_sd_summary();
-        return;
+        first_init = init_sd_summary;
+    }
+
+    function init_transponder_config() {
+        var next_callback = init_sd_summary;
+        MSP.send_message(MSPCodes.MSP_TRANSPONDER_CONFIG, false, false, next_callback);
     }
 
     function init_sd_summary() {
-        MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, load_html); 
+        var next_callback = init_sensor_alignment;
+        MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, next_callback); 
     }
+    
+    function init_sensor_alignment() {
+        var next_callback = load_html;
+        if (semver.gte(CONFIG.apiVersion, "1.15.0")) {
+            MSP.send_message(MSPCodes.MSP_SENSOR_ALIGNMENT, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
     
     function load_html() {
         $('#content').load("./tabs/qa.html", process_html);
@@ -594,7 +611,8 @@ TABS.qa.initialize = function (callback) {
         var bat_voltage_e = $('.bat-voltage'),
             bat_mah_drawn_e = $('.bat-mah-drawn'),
             bat_mah_drawing_e = $('.bat-mah-drawing'),
-            rssi_e = $('.rssi');
+            rssi_e = $('.rssi'),
+            gyro_status_e = $('.gyro-status');
 
         function get_analog_data() {
 
@@ -621,10 +639,32 @@ TABS.qa.initialize = function (callback) {
 
         update_html();
         
+        //
+        // Gyro status
+        //
+        
+        const GYRO_DETECTION_FLAGS = {
+                DETECTED_GYRO_1:      (1 << 0), 
+                DETECTED_GYRO_2:      (1 << 1),
+                DETECTED_DUAL_GYROS:  (1 << 7)
+        };
+
+        var detected_gyro_1 = (SENSOR_ALIGNMENT.gyro_detection_flags & GYRO_DETECTION_FLAGS.DETECTED_GYRO_1) != 0;
+        var detected_gyro_2 = (SENSOR_ALIGNMENT.gyro_detection_flags & GYRO_DETECTION_FLAGS.DETECTED_GYRO_2) != 0;
+        var detected_dual_gyros = (SENSOR_ALIGNMENT.gyro_detection_flags & GYRO_DETECTION_FLAGS.DETECTED_DUAL_GYROS) != 0;
+
+        if (detected_dual_gyros) {
+            gyro_status_e.text(i18n.getMessage('qaGyroStatus_DualGyros'));
+        } else if (detected_gyro_1) {
+            gyro_status_e.text(i18n.getMessage('qaGyroStatus_FirstOnly'));
+        } else if (detected_gyro_2) {
+            gyro_status_e.text(i18n.getMessage('qaGyroStatus_SecondOnly'));
+        }
+
         GUI.content_ready(callback);
     }
 
-    MSP.send_message(MSPCodes.MSP_TRANSPONDER_CONFIG, false, false, init_sd_summary);
+    first_init();
 };
 
 TABS.qa.cleanup = function (callback) {
