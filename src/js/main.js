@@ -339,6 +339,9 @@ function startProcess() {
                     case 'power':
                         TABS.power.initialize(content_ready);
                         break;
+                    case 'qa':
+                        TABS.qa.initialize(content_ready);
+                        break;
                     case 'setup':
                         TABS.setup.initialize(content_ready);
                         break;

@@ -1,0 +1,203 @@
+.tab-qa .info {
+    margin-bottom: 10px;
+    margin-top: 8px;
+    margin-left: 10px;
+}
+
+.tab-qa .info input {
+    vertical-align: middle;
+    margin: 0 5px 0 15px;
+}
+
+.tab-qa .info .first {
+    margin: 0 5px 0 0;
+}
+
+.tab-qa .wrapper {
+    display: none;
+}
+
+.tab-qa .plot_control {
+    float: right;
+    width: 160px;
+    /* border: 1px solid silver; */
+    height: 160px;
+    margin: 0;
+    background-color: #ECECEC;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.tab-qa .plot_control .title {
+    line-height: 20px;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-top: 10px;
+    text-align: left;
+    float: left;
+}
+
+.tab-qa .plot_control dl {
+    padding: 10px 10px 0 10px;
+    line-height: 22px;
+    float: left;
+}
+
+.tab-qa .plot_control dt {
+    float: left;
+    width: 60px;
+    height: 22px;
+    font-weight: bold;
+}
+
+.tab-qa .plot_control dd {
+    /* margin-left: 20px; */
+    height: 25px;
+    float: right;
+    width: 73px;
+}
+
+.tab-qa .plot_control select {
+    float: right;
+    width: 80px;
+    border: 1px solid var(--subtleAccent);
+    border-radius: 3px;
+}
+
+.tab-qa .plot_control .x {
+    background-color: #00A8F0;
+    padding: 3px;
+    color: #fff;
+    height: 12px;
+    float: right;
+    border-radius: 3px;
+    line-height: 12px;
+    margin-bottom: 2px;
+}
+
+.tab-qa .plot_control .y {
+    background-color: #C0D800;
+    padding: 3px;
+    color: #fff;
+    height: 12px;
+    float: right;
+    border-radius: 3px;
+    line-height: 12px;
+    margin-bottom: 2px;
+}
+
+.tab-qa .plot_control .z {
+    background-color: #CB4B4B;
+    padding: 3px;
+    color: #fff;
+    height: 12px;
+    float: right;
+    border-radius: 3px;
+    line-height: 12px;
+    margin-bottom: 2px;
+}
+
+.tab-qa .plot_control .x, .tab-qa .plot_control .y, .tab-qa .plot_control .z {
+    text-align: right;
+}
+/* SVG classes*/
+.tab-qa svg {
+    float: left;
+    width: calc(100% - 180px);
+    height: 140px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.tab-qa .grid .tick {
+    stroke: silver;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.tab-qa .grid path {
+    stroke-width: 0;
+}
+
+.tab-qa .data .line {
+    stroke-width: 2px;
+    fill: none;
+}
+
+.tab-qa .axis path, .tab-qa .axis line {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.tab-qa text {
+    stroke: none;
+    fill: #828885;
+    font-size: 10px;
+}
+
+.tab-qa .line:nth-child(1) {
+    stroke: #00A8F0;
+}
+
+.tab-qa .line:nth-child(2) {
+    stroke: #C0D800;
+}
+
+.tab-qa .line:nth-child(3) {
+    stroke: #CB4B4B;
+}
+
+.tab-qa .line:nth-child(4) {
+    stroke: #4DA74D;
+}
+
+.tab-qa .legend .item:nth-child(1) {
+    fill: #00A8F0;
+}
+
+.tab-qa .legend .item:nth-child(2) {
+    fill: #C0D800;
+}
+
+.tab-qa .legend .item:nth-child(3) {
+    fill: #CB4B4B;
+}
+
+.tab-qa .legend .item:nth-child(4) {
+    fill: #4DA74D;
+}
+
+.require-transponder-supported,
+.tab-qa.transponder-supported .require-transponder-unsupported {
+    display: none;
+}
+
+.tab-qa.transponder-supported .require-transponder-supported {
+    display: block;
+}
+
+@media all and (max-width: 575px) {
+    .tab-qa .plot_control {
+        width: 130px;
+    }
+    .tab-qa .plot_control dt {
+        width: 60px;
+    }
+    .tab-qa .plot_control dd {
+        width: 50px;
+    }
+    .tab-qa .plot_control dd select {
+        width: 100%;
+    }
+    .tab-qa .plot_control .x, .tab-qa .plot_control .y, .tab-qa .plot_control .z {
+        height: 18px;
+        box-sizing: border-box;
+    }
+    .tab-qa svg {
+        width: calc(100% - 130px);
+        margin-left: 0;
+    }
+}

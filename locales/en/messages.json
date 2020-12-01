@@ -311,6 +311,9 @@
     "tabSetupOSD": {
         "message": "OSD Setup"
     },
+    "tabQA": {
+        "message": "QA"
+    },
     "tabConfiguration": {
         "message": "Configuration"
     },

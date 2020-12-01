@@ -24,6 +24,7 @@ var GUI_control = function () {
     ];
     this.defaultAllowedFCTabsWhenConnected = [
         'setup',
+        'qa',
         'failsafe',
         'transponder',
         'osd',

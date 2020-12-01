@@ -1113,6 +1113,18 @@ li.active .ic_setup {
     background-image: url(../images/icons/cf_icon_setup_white.svg);
 }
 
+.ic_qa {
+    background-image: url(../images/icons/cf_icon_qa_grey.svg);
+}
+
+.ic_qa:hover {
+    background-image: url(../images/icons/cf_icon_qa_white.svg);
+}
+
+li.active .ic_qa {
+    background-image: url(../images/icons/cf_icon_qa_white.svg);
+}
+
 .ic_ports {
     background-image: url(../images/icons/cf_icon_ports_grey.svg);
 }
