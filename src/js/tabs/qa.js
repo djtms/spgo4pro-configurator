@@ -1,5 +1,8 @@
 'use strict';
 
+var
+    sdcardTimer;
+
 TABS.qa = {
     transponder: {
         available: false
@@ -190,12 +193,109 @@ TABS.qa.initialize = function (callback) {
     }
 
     if ( !TABS.qa.transponder.available ) {
-        load_html();
+        init_sd_summary();
         return;
     }
 
+    function init_sd_summary() {
+        MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, load_html); 
+    }
+    
     function load_html() {
         $('#content').load("./tabs/qa.html", process_html);
+    }
+
+    //
+    // SD card
+    //
+    
+    function formatFilesizeKilobytes(kilobytes) {
+        if (kilobytes < 1024) {
+            return Math.round(kilobytes) + "kB";
+        }
+
+        var
+            megabytes = kilobytes / 1024,
+            gigabytes;
+
+        if (megabytes < 900) {
+            return megabytes.toFixed(1) + "MB";
+        } else {
+            gigabytes = megabytes / 1024;
+
+            return gigabytes.toFixed(1) + "GB";
+        }
+    }
+
+    function formatFilesizeBytes(bytes) {
+        if (bytes < 1024) {
+            return bytes + "B";
+        }
+        return formatFilesizeKilobytes(bytes / 1024);
+    }
+
+    function update_bar_width(bar, value, total, label, valuesAreKilobytes) {
+        if (value > 0) {
+            bar.css({
+                width: (value / total * 100) + "%",
+                display: 'block'
+            });
+
+            $("div", bar).text((label ? label + " " : "") + (valuesAreKilobytes ? formatFilesizeKilobytes(value) : formatFilesizeBytes(value)));
+        } else {
+            bar.css({
+                display: 'none'
+            });
+        }
+    }
+
+    function update_html() {
+        update_bar_width($(".tab-qa .sdcard-other"), SDCARD.totalSizeKB - SDCARD.freeSizeKB, SDCARD.totalSizeKB, i18n.getMessage('dataflashUnavSpace'), true);
+        update_bar_width($(".tab-qa .sdcard-free"), SDCARD.freeSizeKB, SDCARD.totalSizeKB, i18n.getMessage('dataflashLogsSpace'), true);
+
+        $(".tab-qa")
+            .toggleClass("sdcard-error", SDCARD.state === MSP.SDCARD_STATE_FATAL)
+            .toggleClass("sdcard-initializing", SDCARD.state === MSP.SDCARD_STATE_CARD_INIT || SDCARD.state === MSP.SDCARD_STATE_FS_INIT)
+            .toggleClass("sdcard-ready", SDCARD.state === MSP.SDCARD_STATE_READY);
+        
+
+        var loggingStatus
+        switch (SDCARD.state) {
+            case MSP.SDCARD_STATE_NOT_PRESENT:
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusNoCard'));
+                loggingStatus = 'SdCard: NotPresent';
+            break;
+            case MSP.SDCARD_STATE_FATAL:
+                $(".sdcard-status").html(i18n.getMessage('sdcardStatusReboot'));
+                loggingStatus = 'SdCard: Error';
+            break;
+            case MSP.SDCARD_STATE_READY:
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusReady'));
+                loggingStatus = 'SdCard: Ready';
+            break;
+            case MSP.SDCARD_STATE_CARD_INIT:
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusStarting'));
+                loggingStatus = 'SdCard: Init';
+            break;
+            case MSP.SDCARD_STATE_FS_INIT:
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusFileSystem'));
+                loggingStatus = 'SdCard: FsInit';
+            break;
+            default:
+                $(".sdcard-status").text(i18n.getMessage('sdcardStatusUnknown',[SDCARD.state]));
+        }
+
+        if (SDCARD.supported && !sdcardTimer) {
+            // Poll for changes in SD card status
+            sdcardTimer = setTimeout(function() {
+                sdcardTimer = false;
+                if (CONFIGURATOR.connectionValid) {
+                    MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function() {
+                        update_html();
+                    });
+                }
+            }, 2000);
+        }
     }
 
     function process_html() {
@@ -513,14 +613,27 @@ TABS.qa.initialize = function (callback) {
 
         GUI.interval_add('qa_analog_data_pull', get_analog_data, 250, true); // 4 fps
 
+        //
+        // SD card
+        //
+        
+        $(".tab-qa").toggleClass("sdcard-supported", SDCARD.supported);
+
+        update_html();
+        
         GUI.content_ready(callback);
     }
-    
-    MSP.send_message(MSPCodes.MSP_TRANSPONDER_CONFIG, false, false, load_html);
+
+    MSP.send_message(MSPCodes.MSP_TRANSPONDER_CONFIG, false, false, init_sd_summary);
 };
 
 TABS.qa.cleanup = function (callback) {
     serial.emptyOutputBuffer();
+
+    if (sdcardTimer) {
+        clearTimeout(sdcardTimer);
+        sdcardTimer = false;
+    }
 
     if (callback) callback();
 };
