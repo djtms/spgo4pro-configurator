@@ -522,12 +522,33 @@ TABS.qa.initialize = function (callback) {
                 save_transponder_data();
             }
         });
+
+        //
+        // RSSI & Battery Voltage
+        //
         
-        
+        // cached elements
+        var bat_voltage_e = $('.bat-voltage'),
+            bat_mah_drawn_e = $('.bat-mah-drawn'),
+            bat_mah_drawing_e = $('.bat-mah-drawing'),
+            rssi_e = $('.rssi');
+
+        function get_analog_data() {
+
+            MSP.send_message(MSPCodes.MSP_ANALOG, false, false, function () {
+                bat_voltage_e.text(i18n.getMessage('initialSetupBatteryValue', [ANALOG.voltage]));
+                bat_mah_drawn_e.text(i18n.getMessage('initialSetupBatteryMahValue', [ANALOG.mAhdrawn]));
+                bat_mah_drawing_e.text(i18n.getMessage('initialSetupBatteryAValue', [ANALOG.amperage.toFixed(2)]));
+                rssi_e.text(i18n.getMessage('initialSetupRSSIValue', [((ANALOG.rssi / 1023) * 100).toFixed(0)]));
+            });
+        }
+
         // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
+        GUI.interval_add('qa_status_pull', function status_pull() {
             MSP.send_message(MSPCodes.MSP_STATUS);
         }, 250, true);
+
+        GUI.interval_add('qa_analog_data_pull', get_analog_data, 250, true); // 4 fps
 
         GUI.content_ready(callback);
     }
