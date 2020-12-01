@@ -257,8 +257,6 @@ TABS.qa.initialize = function (callback) {
             });
 
             $('.tab-qa .rate select:first').change();
-
-            ConfigStorage.set({'graphs_enabled': checkboxes});
         });
 
         let altitudeHint_e = $('.tab-qa #qaAltitudeHint');
@@ -339,9 +337,6 @@ TABS.qa.initialize = function (callback) {
             // what we will do instead is = determinate the fastest refresh rate for those 3 attributes, use that as a "polling rate"
             // and use the "slower" refresh rates only for re-drawing the graphs (to save resources/computing power)
             var fastest = d3.min([rates.gyro, rates.accel, rates.mag]);
-
-            // store current/latest refresh rates in the storage
-            ConfigStorage.set({'sensor_settings': {'rates': rates, 'scales': scales}});
 
             // re-initialize domains with new scales
             gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-scales.gyro, scales.gyro]);
@@ -442,40 +437,8 @@ TABS.qa.initialize = function (callback) {
             }
         });
 
-        ConfigStorage.get('sensor_settings', function (result) {
-            // set refresh speeds according to configuration saved in storage
-            if (result.sensor_settings) {
-                $('.tab-qa select[name="gyro_refresh_rate"]').val(result.sensor_settings.rates.gyro);
-                $('.tab-qa select[name="gyro_scale"]').val(result.sensor_settings.scales.gyro);
-
-                $('.tab-qa select[name="accel_refresh_rate"]').val(result.sensor_settings.rates.accel);
-                $('.tab-qa select[name="accel_scale"]').val(result.sensor_settings.scales.accel);
-
-                $('.tab-qa select[name="mag_refresh_rate"]').val(result.sensor_settings.rates.mag);
-                $('.tab-qa select[name="mag_scale"]').val(result.sensor_settings.scales.mag);
-
-                $('.tab-qa select[name="altitude_refresh_rate"]').val(result.sensor_settings.rates.altitude);
-                $('.tab-qa select[name="sonar_refresh_rate"]').val(result.sensor_settings.rates.sonar);
-
-                $('.tab-qa select[name="debug_refresh_rate"]').val(result.sensor_settings.rates.debug);
-
-                // start polling data by triggering refresh rate change event
-                $('.tab-qa .rate select:first').change();
-            } else {
-                // start polling immediatly (as there is no configuration saved in the storage)
-                $('.tab-qa .rate select:first').change();
-            }
-            ConfigStorage.get('graphs_enabled', function (resultGraphs) {
-                if (resultGraphs.graphs_enabled) {
-                    var checkboxes = $('.tab-qa .info .checkboxes input');
-                    for (var i = 0; i < resultGraphs.graphs_enabled.length; i++) {
-                        checkboxes.eq(i).not(':disabled').prop('checked', resultGraphs.graphs_enabled[i]).change();
-                    }
-                } else {
-                    $('.tab-qa .info input:lt(4):not(:disabled)').prop('checked', true).change();
-                }
-            });
-        });
+        $('.tab-qa .rate select:first').change();
+        $('.tab-qa .info input:not(:disabled)').prop('checked', true).change();
 
         //
         // Transponder Config
