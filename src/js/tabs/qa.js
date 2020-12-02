@@ -467,7 +467,7 @@ TABS.qa.initialize = function (callback) {
             });
 
             // timer initialization
-            GUI.interval_kill_all(['status_pull']);
+            GUI.interval_kill_all(['qa_status_pull', 'qa_analog_data_pull', 'qa_connection_time']);
 
             // data pulling timers
             if (checkboxes[0] || checkboxes[1] || checkboxes[2]) {
