@@ -1027,6 +1027,12 @@
     "qaGyroStatus_SecondOnly": {
         "message": "SECOND ONLY"
     },
+    "qaButtonRebootFlashBootloader": {
+        "message": "Reboot to flash bootloader"
+    },
+    "qaButtonTransponderSave": {
+        "message": "Save transponder test code"
+    },
     
     "featureNone": {
         "message": "&lt;Select One&gt;"

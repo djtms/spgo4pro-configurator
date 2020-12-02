@@ -32,7 +32,8 @@ function MspHelper () {
         FIRMWARE: 0,
         BOOTLOADER: 1,
         MSC: 2,
-        MSC_UTC: 3
+        MSC_UTC: 3,
+        FLASH_BOOTLOADER: 4
     };
 
     self.RESET_TYPES = {

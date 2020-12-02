@@ -661,6 +661,16 @@ TABS.qa.initialize = function (callback) {
             gyro_status_e.text(i18n.getMessage('qaGyroStatus_SecondOnly'));
         }
 
+        //
+        // Reboot/Bootloader
+        //
+        $('a.rebootFlashBootloader').click(function () {
+            var buffer = [];
+            buffer.push(mspHelper.REBOOT_TYPES.FLASH_BOOTLOADER);
+            MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
+        });
+
+        
         GUI.content_ready(callback);
     }
 
