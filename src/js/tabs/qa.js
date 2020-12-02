@@ -612,7 +612,8 @@ TABS.qa.initialize = function (callback) {
             bat_mah_drawn_e = $('.bat-mah-drawn'),
             bat_mah_drawing_e = $('.bat-mah-drawing'),
             rssi_e = $('.rssi'),
-            gyro_status_e = $('.gyro-status');
+            gyro_status_e = $('.gyro-status'),
+            connection_time_e = $('.connection-time');
 
         function get_analog_data() {
 
@@ -669,6 +670,20 @@ TABS.qa.initialize = function (callback) {
             buffer.push(mspHelper.REBOOT_TYPES.FLASH_BOOTLOADER);
             MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
         });
+
+        //
+        // Connection Time (Ideally, we want uptime, but the FC doesn't support retrieval of it by MSP.
+        //
+
+        function refresh_connection_time() {
+            var uptimeInterval = new Date().getTime() - GUI.connected_at.getTime();
+            var uptimeDate = new Date(uptimeInterval);
+            var uptimeHHMMSS = uptimeDate.toISOString().substr(11, 8);
+            
+            $(connection_time_e).text(uptimeHHMMSS);
+        }
+        
+        GUI.interval_add('qa_connection_time', refresh_connection_time, 1000, true); // 1 fps
 
         
         GUI.content_ready(callback);

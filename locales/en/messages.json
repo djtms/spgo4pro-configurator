@@ -1031,6 +1031,9 @@
     "qaGyroStatus_SecondOnly": {
         "message": "SECOND ONLY"
     },
+    "qaConnectionTime": {
+        "message": "Connection Time"
+    },
     "qaButtonRebootFlashBootloader": {
         "message": "Reboot to flash bootloader"
     },

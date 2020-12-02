@@ -13,6 +13,7 @@ var GUI_control = function () {
     this.operating_system = null;
     this.interval_array = [];
     this.timeout_array = [];
+    this.connected_at = null;
 
     this.defaultAllowedTabsWhenDisconnected = [
         'landing',

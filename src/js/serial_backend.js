@@ -248,7 +248,8 @@ function onOpen(openInfo) {
         // request configuration data
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             analytics.setFlightControllerData(analytics.DATA.API_VERSION, CONFIG.apiVersion);
-
+            GUI.connected_at = new Date();
+            
             GUI.log(i18n.getMessage('apiVersionReceived', [CONFIG.apiVersion]));
 
             if (semver.gte(CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
