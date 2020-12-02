@@ -270,6 +270,10 @@
     display: block;
 }
 
+.gui_button_container .btn {
+    float: left;
+}
+
 @media all and (max-width: 575px) {
     .tab-qa .plot_control {
         width: 130px;
