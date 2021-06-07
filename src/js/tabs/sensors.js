@@ -25,9 +25,11 @@ TABS.sensors.initialize = function (callback) {
             data[i] = new Array();
             data[i].min = -1;
             data[i].max = 1;
+            data[i].average = 0;
         }
         return data;
     }
+
 
     function addSampleToData(data, sampleNumber, sensorData) {
         for (var i = 0; i < data.length; i++) {
@@ -45,8 +47,20 @@ TABS.sensors.initialize = function (callback) {
                 data[i].shift();
             }
         }
+        
+        for (var i = 0; i < data.length; i++) {
+            var average = 0;
+
+            for (var p = 0; p < data[i].length; p++) {
+                var dataPoint = data[i][p][1];
+                average = ((average * p) + dataPoint ) / (p + 1);
+            }
+            
+            data[i].average = average;
+        }
         return sampleNumber + 1;
     }
+
 
     var margin = {top: 20, right: 10, bottom: 10, left: 40};
     function updateGraphHelperSize(helpers) {
@@ -417,7 +431,7 @@ TABS.sensors.initialize = function (callback) {
 
                     addSampleToData(debug_data[i], samples_debug_i, [SENSOR_DATA.debug[i]]);
                     drawGraph(debugHelpers[i], debug_data[i], samples_debug_i);
-                    raw_data_text_ements.x[5 + i].text(SENSOR_DATA.debug[i]);
+                    raw_data_text_ements.x[5 + i].text(SENSOR_DATA.debug[i] + '/' + debug_data[i][0].average.toFixed(2));
                 }
                 samples_debug_i++;
             }
