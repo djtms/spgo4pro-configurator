@@ -68,7 +68,7 @@ var STM32DFU_protocol = function () {
 };
 
 STM32DFU_protocol.prototype.connect = function (device, hex, options, callback) {
-    var self = this;
+    const self = this;
     self.hex = hex;
     self.callback = callback;
 
@@ -116,7 +116,7 @@ STM32DFU_protocol.prototype.checkChromeError = function() {
 }
 
 STM32DFU_protocol.prototype.openDevice = function (device) {
-    var self = this;
+    const self = this;
 
     chrome.usb.openDevice(device, function (handle) {
         if(self.checkChromeError()) {
@@ -137,7 +137,7 @@ STM32DFU_protocol.prototype.openDevice = function (device) {
 };
 
 STM32DFU_protocol.prototype.closeDevice = function () {
-    var self = this;
+    const self = this;
 
     chrome.usb.closeDevice(this.handle, function closed() {
         if(self.checkChromeError()) {
@@ -153,7 +153,7 @@ STM32DFU_protocol.prototype.closeDevice = function () {
 };
 
 STM32DFU_protocol.prototype.claimInterface = function (interfaceNumber) {
-    var self = this;
+    const self = this;
 
     chrome.usb.claimInterface(this.handle, interfaceNumber, function claimed() {
         // Don't perform the error check on MacOS at this time as there seems to be a bug
@@ -175,7 +175,7 @@ STM32DFU_protocol.prototype.claimInterface = function (interfaceNumber) {
 };
 
 STM32DFU_protocol.prototype.releaseInterface = function (interfaceNumber) {
-    var self = this;
+    const self = this;
 
     chrome.usb.releaseInterface(this.handle, interfaceNumber, function released() {
         console.log('Released interface: ' + interfaceNumber);
@@ -193,7 +193,7 @@ STM32DFU_protocol.prototype.resetDevice = function (callback) {
 };
 
 STM32DFU_protocol.prototype.getString = function (index, callback) {
-    var self = this;
+    const self = this;
 
     chrome.usb.controlTransfer(self.handle, {
         'direction':    'in',
@@ -221,7 +221,7 @@ STM32DFU_protocol.prototype.getString = function (index, callback) {
 }
 
 STM32DFU_protocol.prototype.getInterfaceDescriptors = function (interfaceNum, callback) {
-    var self = this;
+    const self = this;
 
     chrome.usb.getConfiguration( this.handle, function (config) {
         if(self.checkChromeError()) {
@@ -263,7 +263,7 @@ STM32DFU_protocol.prototype.getInterfaceDescriptors = function (interfaceNum, ca
 
 
 STM32DFU_protocol.prototype.getInterfaceDescriptor = function (_interface, callback) {
-    var self = this;
+    const self = this;
     chrome.usb.controlTransfer(this.handle, {
         'direction':    'in',
         'recipient':    'device',
@@ -297,7 +297,7 @@ STM32DFU_protocol.prototype.getInterfaceDescriptor = function (_interface, callb
 }
 
 STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, callback) {
-    var self = this;
+    const self = this;
     chrome.usb.controlTransfer(this.handle, {
         'direction':    'in',
         'recipient':    'interface',
@@ -329,7 +329,7 @@ STM32DFU_protocol.prototype.getFunctionalDescriptor = function (_interface, call
 }
 
 STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
-    var self = this;
+    const self = this;
 
     self.getInterfaceDescriptors(0, function (descriptors, resultCode) {
         if (resultCode) {
@@ -433,7 +433,7 @@ STM32DFU_protocol.prototype.getChipInfo = function (_interface, callback) {
 }
 
 STM32DFU_protocol.prototype.controlTransfer = function (direction, request, value, _interface, length, data, callback, _timeout) {
-    var self = this;
+    const self = this;
 
     // timeout support was added in chrome v43
     var timeout;
@@ -495,7 +495,7 @@ STM32DFU_protocol.prototype.controlTransfer = function (direction, request, valu
 
 // routine calling DFU_CLRSTATUS until device is in dfuIDLE state
 STM32DFU_protocol.prototype.clearStatus = function (callback) {
-    var self = this;
+    const self = this;
 
     function check_status() {
         self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
@@ -517,7 +517,7 @@ STM32DFU_protocol.prototype.clearStatus = function (callback) {
 };
 
 STM32DFU_protocol.prototype.loadAddress = function (address, callback, abort) {
-    var self = this;
+    const self = this;
 
     self.controlTransfer('out', self.request.DNLOAD, 0, 0, 0, [0x21, address & 0xff, (address >> 8) & 0xff, (address >> 16) & 0xff, (address >> 24) & 0xff], function () {
         self.controlTransfer('in', self.request.GETSTATUS, 0, 0, 6, 0, function (data) {
@@ -563,7 +563,7 @@ STM32DFU_protocol.prototype.verify_flash = function (first_array, second_array) 
 };
 
 STM32DFU_protocol.prototype.isBlockUsable = function(startAddress, length) {
-    var self = this;
+    const self = this;
 
     let result = false;
 
@@ -604,7 +604,7 @@ STM32DFU_protocol.prototype.isBlockUsable = function(startAddress, length) {
 };
 
 STM32DFU_protocol.prototype.upload_procedure = function (step) {
-    var self = this;
+    const self = this;
 
     switch (step) {
         case 0:
