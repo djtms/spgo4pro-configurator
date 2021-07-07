@@ -377,38 +377,40 @@ TABS.qa.initialize = function (callback) {
             mag_data = initDataArray(3),
             altitude_data = initDataArray(1),
             sonar_data = initDataArray(1),
-            debug_data = [
-            initDataArray(1),
-            initDataArray(1),
-            initDataArray(1),
-            initDataArray(1)
-        ];
+            debug_data = initDataArray(4);
 
         var gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-2000, 2000]);
         var accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-2, 2]);
         var magHelpers = initGraphHelpers('#mag', samples_mag_i, [-1, 1]);
         var altitudeHelpers = initGraphHelpers('#altitude', samples_altitude_i);
         var sonarHelpers = initGraphHelpers('#sonar', samples_sonar_i);
-        var debugHelpers = [
-            initGraphHelpers('#debug1', samples_debug_i),
-            initGraphHelpers('#debug2', samples_debug_i),
-            initGraphHelpers('#debug3', samples_debug_i),
-            initGraphHelpers('#debug4', samples_debug_i)
-        ];
+        var debugHelpers = initGraphHelpers('#debug1', samples_debug_i);
 
         var raw_data_text_ements = {
             x: [],
             y: [],
-            z: []
+            z: [],
+            a: [],
+            b: [],
+            c: [],
+            d: [],
         };
-        $('.plot_control .x, .plot_control .y, .plot_control .z').each(function () {
+        $('.plot_control .x, .plot_control .y, .plot_control .z, .plot_control .a, .plot_control .b, .plot_control .c, .plot_control .d').each(function () {
             var el = $(this);
             if (el.hasClass('x')) {
                 raw_data_text_ements.x.push(el);
             } else if (el.hasClass('y')) {
                 raw_data_text_ements.y.push(el);
-            } else {
+            } else if (el.hasClass('z')) {
                 raw_data_text_ements.z.push(el);
+            } else if (el.hasClass('a')) {
+                raw_data_text_ements.a.push(el);
+            } else if (el.hasClass('b')) {
+                raw_data_text_ements.b.push(el);
+            } else if (el.hasClass('c')) {
+                raw_data_text_ements.c.push(el);
+            } else if (el.hasClass('d')) {
+                raw_data_text_ements.d.push(el);
             }
         });
 
@@ -524,13 +526,14 @@ TABS.qa.initialize = function (callback) {
             }
 
             function update_debug_graphs() {
-                for (var i = 0; i < 4; i++) {
-                    updateGraphHelperSize(debugHelpers[i]);
-
-                    addSampleToData(debug_data[i], samples_debug_i, [SENSOR_DATA.debug[i]]);
-                    drawGraph(debugHelpers[i], debug_data[i], samples_debug_i);
-                    raw_data_text_ements.x[5 + i].text(SENSOR_DATA.debug[i] + '/' + debug_data[i][0].average.toFixed(2));
-                }
+                updateGraphHelperSize(debugHelpers);
+                addSampleToData(debug_data, samples_debug_i, SENSOR_DATA.debug);
+                drawGraph(debugHelpers, debug_data, samples_debug_i);
+                raw_data_text_ements.a[0].text(SENSOR_DATA.debug[0] + '/' + debug_data[0].average.toFixed(2));
+                raw_data_text_ements.b[0].text(SENSOR_DATA.debug[1] + '/' + debug_data[1].average.toFixed(2));
+                raw_data_text_ements.c[0].text(SENSOR_DATA.debug[2] + '/' + debug_data[2].average.toFixed(2));
+                raw_data_text_ements.d[0].text(SENSOR_DATA.debug[3] + '/' + debug_data[3].average.toFixed(2));
+                
                 samples_debug_i++;
             }
         });

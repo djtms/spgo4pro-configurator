@@ -52,13 +52,14 @@
     width: 60px;
     height: 22px;
     font-weight: bold;
+    margin-bottom: 2px;
 }
 
 .tab-qa .plot_control dd {
     /* margin-left: 20px; */
     height: 25px;
     float: right;
-    width: 73px;
+    width: calc(100% - 66px);
 }
 
 .tab-qa .plot_control select {
@@ -68,6 +69,7 @@
     border-radius: 3px;
 }
 
+.tab-qa .plot_control .a,
 .tab-qa .plot_control .x {
     background-color: #00A8F0;
     padding: 3px;
@@ -76,9 +78,10 @@
     float: right;
     border-radius: 3px;
     line-height: 12px;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
 }
 
+.tab-qa .plot_control .b,
 .tab-qa .plot_control .y {
     background-color: #C0D800;
     padding: 3px;
@@ -87,9 +90,10 @@
     float: right;
     border-radius: 3px;
     line-height: 12px;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
 }
 
+.tab-qa .plot_control .c,
 .tab-qa .plot_control .z {
     background-color: #CB4B4B;
     padding: 3px;
@@ -98,7 +102,18 @@
     float: right;
     border-radius: 3px;
     line-height: 12px;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
+}
+
+.tab-qa .plot_control .d {
+    background-color: #4BCB4B;
+    padding: 3px;
+    color: #fff;
+    height: 12px;
+    float: right;
+    border-radius: 3px;
+    line-height: 12px;
+    margin-bottom: 6px;
 }
 
 .tab-qa .plot_control .x, .tab-qa .plot_control .y, .tab-qa .plot_control .z {
