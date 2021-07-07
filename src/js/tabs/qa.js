@@ -12,6 +12,8 @@ TABS.qa = {
 TABS.qa.initialize = function (callback) {
     var self = this;
 
+    const graphElementNames = ['gyro', 'accel', 'mag', 'altitude', 'sonar', 'debug'];
+
     if (GUI.active_tab != 'qa') {
         GUI.active_tab = 'qa';
     }
@@ -151,54 +153,6 @@ TABS.qa.initialize = function (callback) {
         lines.attr('d', graphHelpers.line);
     }
 
-    function plot_gyro(enable) {
-        if (enable) {
-            $('.wrapper.gyro').show();
-        } else {
-            $('.wrapper.gyro').hide();
-        }
-    }
-
-    function plot_accel(enable) {
-        if (enable) {
-            $('.wrapper.accel').show();
-        } else {
-            $('.wrapper.accel').hide();
-        }
-    }
-
-    function plot_mag(enable) {
-        if (enable) {
-            $('.wrapper.mag').show();
-        } else {
-            $('.wrapper.mag').hide();
-        }
-    }
-
-    function plot_altitude(enable) {
-        if (enable) {
-            $('.wrapper.altitude').show();
-        } else {
-            $('.wrapper.altitude').hide();
-        }
-    }
-
-    function plot_sonar(enable) {
-        if (enable) {
-            $('.wrapper.sonar').show();
-        } else {
-            $('.wrapper.sonar').hide();
-        }
-    }
-
-    function plot_debug(enable) {
-        if (enable) {
-            $('.wrapper.debug').show();
-        } else {
-            $('.wrapper.debug').hide();
-        }
-    }
-
     // transponder supported added in MSP API Version 1.16.0
     if ( CONFIG ) {
         TABS.qa.transponder.available = semver.gte(CONFIG.apiVersion, "1.16.0");
@@ -327,6 +281,32 @@ TABS.qa.initialize = function (callback) {
         }
     }
 
+    function update_graph_alignment() {
+        let index = 0;
+        let visibleIndex = 0;
+        for (let checkbox of $('.tab-qa .info .checkboxes input')) {
+            
+            if ($(checkbox).is(':checked')) {
+
+                var elementName = '.wrapper.' + graphElementNames[index];
+
+                var leftAligned = (visibleIndex % 2) == 0;
+
+                if (leftAligned) {
+                    $(elementName).removeClass('right')
+                    $(elementName).addClass('left')
+                } else {
+                    $(elementName).removeClass('left')
+                    $(elementName).addClass('right')
+                }
+
+                visibleIndex++;
+            }
+            
+            index++;
+        }
+    }
+    
     function process_html() {
         // translate to user-selected language
         i18n.localizePage();
@@ -359,33 +339,22 @@ TABS.qa.initialize = function (callback) {
             var enable = $(this).prop('checked');
             var index = $(this).parent().index();
 
-            switch (index) {
-                case 0:
-                    plot_gyro(enable);
-                    break;
-                case 1:
-                    plot_accel(enable);
-                    break;
-                case 2:
-                    plot_mag(enable);
-                    break;
-                case 3:
-                    plot_altitude(enable);
-                    break;
-                case 4:
-                    plot_sonar(enable);
-                    break;
-                case 5:
-                    plot_debug(enable);
-                    break;
+            var elementName = '.wrapper.' + graphElementNames[index];
+            
+            if (enable) {
+                $(elementName).show();
+            } else {
+                $(elementName).hide();
             }
-
+            
             var checkboxes = [];
             $('.tab-qa .info .checkboxes input').each(function () {
                 checkboxes.push($(this).prop('checked'));
             });
 
             $('.tab-qa .rate select:first').change();
+            
+            update_graph_alignment();
         });
 
         let altitudeHint_e = $('.tab-qa #qaAltitudeHint');

@@ -13,8 +13,12 @@
     margin: 0 5px 0 0;
 }
 
-.tab-qa .wrapper {
+.tab-qa .graphs .wrapper {
     display: none;
+}
+
+.tab-qa .graphs .wrapper {
+    width: calc(50% - 2px);
 }
 
 .tab-qa .plot_control {
